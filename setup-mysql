@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Import example-data.sql into an existing SQL database
+# May be run multiple times, so shouldn't overwrite if data already exists
+
+# root's credentials for the target VM
+# specified in manifests/default.pp
+USER="root"
+ROOTPW="vagrantpassword"
+
+SQL_FILE="/vagrant/mysql/example-data.sql"  # file in which SQL data is stored
+DATABASE="example_database"                 # database that's created by SQL_FILE
+EG_TABLE="example_users"                    # a table that's created by SQL_FILE - must NOT be a substring of $DATABASE
+
+mysqlshow -u $USER -p$ROOTPW $DATABASE | grep $EG_TABLE
+if [ $? -eq 0 ]; then
+    echo "Table already exists, so not creating";
+    exit;
+fi
+
+echo "Rebuilding tables from $SQL_FILE"
+mysql -u $USER -p$ROOTPW $DATABASE < $SQL_FILE
