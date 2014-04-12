@@ -27,8 +27,8 @@ To include this in your own project, run `cp -r Vagrantfile vagrant-config your-
 
 ## Make it your own
 
-- Replace `example-data.sql` with your own data
-- Copy your web app in to `/var/www/html`
+- Set `mysql_dumpfile` to your own data file in `Vagrantfile`
+- Copy your web app to `/var/www/html`
 - Install your own packages using puppet
 
 ## How it works
