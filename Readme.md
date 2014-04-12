@@ -23,6 +23,8 @@ Once Vagrant has built and provisioned the machine, you can access the web serve
 
 You can access the MySQL database by connecting to the VM with `vagrant ssh`, and then running `mysql -u testuser -ptest` (or `sudo mysql`) for root access.
 
+To include this in your own project, run `cp -r Vagrantfile vagrant-config your-project-dir/`. You can then run `vagrant up` from within your project.
+
 ## Make it your own
 
 - Replace `example-data.sql` with your own data
