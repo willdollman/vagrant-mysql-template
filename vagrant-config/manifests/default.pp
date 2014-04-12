@@ -16,7 +16,7 @@ $grants = {
     "testuser@localhost/$database_name.*" => {
         ensure => 'present',
         privileges => ['ALL'],
-        table => '.*',
+        table => "$database_name.*",
         user => 'testuser@localhost',
     },
 }
