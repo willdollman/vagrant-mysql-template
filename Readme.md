@@ -21,7 +21,7 @@ Run `vagrant up` in that directory
 
 Once Vagrant has built and provisioned the machine, you can access the web server at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
-You can access the MySQL database by connecting to the VM with `vagrant ssh`, and then running `mysql -u testuser -p testpassword` (or `sudo mysql`) for root access.
+You can access the MySQL database by connecting to the VM with `vagrant ssh`, and then running `mysql -u testuser -ptest` (or `sudo mysql`) for root access.
 
 ## Make it your own
 
