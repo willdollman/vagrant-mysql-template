@@ -1,31 +1,30 @@
 # Define MySQL configuration - users, databases, grants
 $users = {
-    'testuser@localhost' => {
+    "$mysql_test_username@localhost" => {
         ensure        => 'present',
-        password_hash => '*94BDCEBE19083CE2A1F959FD02F964C7AF4CFC29', # = test
+        password_hash => '*94BDCEBE19083CE2A1F959FD02F964C7AF4CFC29',  # = test
     },
 }
-$database_name = 'example_database' # specify database name here
 $databases = {
-    "$database_name" => {           # double quotes required to interpolate variable
+    "$mysql_database_name" => {  # double quotes required to interpolate variable
         ensure  => 'present',
         charset => 'utf8',
     },
 }
 $grants = {
-    "testuser@localhost/$database_name.*" => {
+    "$mysql_test_username@localhost/$mysql_database_name.*" => {
         ensure => 'present',
         privileges => ['ALL'],
-        table => "$database_name.*",
-        user => 'testuser@localhost',
+        table => "$mysql_database_name.*",
+        user => "$mysql_test_username@localhost",
     },
 }
 # Perform MySQL configuration
 class { '::mysql::server':
-    root_password => 'vagrantpassword',
-    users     => $users,
-    databases => $databases,
-    grants    => $grants,
+    root_password => $mysql_root_password,
+    users         => $users,
+    databases     => $databases,
+    grants        => $grants,
 }
 
 # Basic Apache configuration

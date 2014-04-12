@@ -5,9 +5,37 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+
+  # Modify these variables to configure how MySQL data is imported
+  # MySQL root credentials
+    mysql_username = "root"
+    mysql_password = "vagrantpassword"
+  # MySQL test user credentials
+    mysql_test_username = "testuser"
+  # MySQL data to import
+    mysql_database = "example_database"
+    mysql_dumpfile = "/vagrant/vagrant-config/mysql/example-data.sql" # document root is /vagrant
+
+  # Provision VM using a combination of bash scripts and Puppet
+
+  config.vm.provision :shell, :path => "vagrant-config/bootstrap-puppet"
+
+  config.vm.provision "puppet" do |puppet|
+      puppet.manifests_path = "vagrant-config/manifests"
+      puppet.manifest_file  = "default.pp"
+      puppet.facter = {
+        "mysql_database_name" => mysql_database,
+        "mysql_root_password" => mysql_password,
+        "mysql_test_username" => mysql_test_username,
+      }
+  end
+
+  config.vm.provision(
+    :shell,
+    :path => "vagrant-config/setup-mysql",
+    :args => "#{mysql_username} #{mysql_password} #{mysql_database} #{mysql_dumpfile}"
+  )
+
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "chef/centos-6.5"
@@ -16,26 +44,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine.
   config.vm.network "forwarded_port", guest: 80, host: 3000
 
-  # Provision VM using a combination of bash scripts and Puppet
-
-  mysql_username = "root"
-  mysql_password = "vagrantpassword"
-  mysql_database = "example_database"
-  mysql_dumpfile = "/vagrant/vagrant-config/mysql/example-data.sql"
-  mysql_test_username = "testuser"
-
-  config.vm.provision :shell, :path => "vagrant-config/bootstrap-puppet"
-
-  config.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "vagrant-config/manifests"
-      puppet.manifest_file  = "default.pp"
-  end
-
-  config.vm.provision(
-    :shell,
-    :path => "vagrant-config/setup-mysql",
-    :args => "#{mysql_username} #{mysql_password} #{mysql_database} #{mysql_dumpfile}"
-  )
 
   ##
   # Other potentially useful settings, taken from the default Vagrantfile
