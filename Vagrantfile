@@ -18,14 +18,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Provision VM using a combination of bash scripts and Puppet
 
-  config.vm.provision :shell, :path => "bootstrap-puppet"
+  config.vm.provision :shell, :path => "vagrant-config/bootstrap-puppet"
 
   config.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "manifests"
+      puppet.manifests_path = "vagrant-config/manifests"
       puppet.manifest_file  = "default.pp"
   end
 
-  config.vm.provision :shell, :path => "setup-mysql"
+  config.vm.provision :shell, :path => "vagrant-config/setup-mysql"
 
   ##
   # Other potentially useful settings, taken from the default Vagrantfile

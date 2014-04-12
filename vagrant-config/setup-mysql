@@ -8,7 +8,7 @@
 USER="root"
 ROOTPW="vagrantpassword"
 
-SQL_FILE="/vagrant/mysql/example-data.sql"  # file in which SQL data is stored
+SQL_FILE="/vagrant/vagrant-config/mysql/example-data.sql"  # file in which SQL data is stored
 DATABASE="example_database"                 # database that's created by SQL_FILE
 EG_TABLE="example_users"                    # a table that's created by SQL_FILE - must NOT be a substring of $DATABASE
 

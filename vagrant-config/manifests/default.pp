@@ -38,7 +38,7 @@ service { "httpd":
 }
 file { "/var/www/html/index.html":
     ensure => "link",
-    target => "/vagrant/html-example/index.html",
+    target => "/vagrant/vagrant-config/html-example/index.html",
     require => Package["httpd"],
     notify => Service ["httpd"],
 }
