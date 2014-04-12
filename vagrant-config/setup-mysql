@@ -3,20 +3,21 @@
 # Import example-data.sql into an existing SQL database
 # May be run multiple times, so shouldn't overwrite if data already exists
 
-# root's credentials for the target VM
-# specified in manifests/default.pp
-USER="root"
-ROOTPW="vagrantpassword"
+USER=$1      # User to insert data with - probably root
+ROOTPW=$2    # MySQL $USER password
+DATABASE=$3  # database to restore $SQL_FILE into
+SQL_FILE=$4  # file in which SQL data is stored - eg /vagrant/vagrant-config/mysql/example-data.sql
+#echo "Variables are $1 $2 $3 $4"
 
-SQL_FILE="/vagrant/vagrant-config/mysql/example-data.sql"  # file in which SQL data is stored
-DATABASE="example_database"                 # database that's created by SQL_FILE
-EG_TABLE="example_users"                    # a table that's created by SQL_FILE - must NOT be a substring of $DATABASE
+touchfile="/etc/mysql/vagrant-created-db" # file used to determine if this script has already run
 
-mysqlshow -u $USER -p$ROOTPW $DATABASE | grep $EG_TABLE
-if [ $? -eq 0 ]; then
-    echo "Table already exists, so not creating";
+if [ -e $touchfile ]; then
+    echo "Tables have already been created, so stopping"
+    echo "(Touchfile $touchfile exists)"
     exit;
 fi
 
 echo "Rebuilding tables from $SQL_FILE"
 mysql -u $USER -p$ROOTPW $DATABASE < $SQL_FILE
+
+touch $touchfile

@@ -18,6 +18,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Provision VM using a combination of bash scripts and Puppet
 
+  mysql_username = "root"
+  mysql_password = "vagrantpassword"
+  mysql_database = "example_database"
+  mysql_dumpfile = "/vagrant/vagrant-config/mysql/example-data.sql"
+  mysql_test_username = "testuser"
+
   config.vm.provision :shell, :path => "vagrant-config/bootstrap-puppet"
 
   config.vm.provision "puppet" do |puppet|
@@ -25,7 +31,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       puppet.manifest_file  = "default.pp"
   end
 
-  config.vm.provision :shell, :path => "vagrant-config/setup-mysql"
+  config.vm.provision(
+    :shell,
+    :path => "vagrant-config/setup-mysql",
+    :args => "#{mysql_username} #{mysql_password} #{mysql_database} #{mysql_dumpfile}"
+  )
 
   ##
   # Other potentially useful settings, taken from the default Vagrantfile
